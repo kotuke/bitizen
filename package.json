@@ -1,0 +1,32 @@
+{
+  "name": "bitizen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deterministic, zero-dependency pixel avatars: the whole figure is personal, in two styles",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    "types": "./src/index.d.ts",
+    "import": "./src/index.mjs"
+  },
+  "types": "./src/index.d.ts",
+  "bin": {
+    "bitizen": "./src/cli.mjs"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test",
+    "benchmark": "node benchmark.mjs",
+    "collision": "node collision-check.mjs",
+    "sample": "node examples/generate-samples.mjs",
+    "preview": "node examples/contact-sheet.mjs",
+    "lint": "eslint .",
+    "docs": "node examples/build-docs.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^9.39.5"
+  }
+}
