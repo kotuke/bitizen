@@ -21,14 +21,12 @@ export const PALETTE = Object.freeze([
 ]);
 
 const CANVAS = 1254;
-const BACKGROUND_GRID = 114;
 const MODULE_STEP = 57;
 const MODULE_SIZE = 46;
 const HALF_MODULE = MODULE_SIZE / 2;
 const CENTER_X = CANVAS / 2;
 
 const BACKGROUND = "#080A0E";
-const GRID = "#20242B";
 const EYE = "#F4F1E7";
 
 const MAX_ROWS = 20;
@@ -355,19 +353,12 @@ export function renderAvatarSvg(descriptor, { size = DEFAULT_SIZE, title = "Gene
   assertAvatarDescriptor(descriptor);
   size = normalizeSize(size);
   requireNonEmptyString(title, "title");
-  const patternId = `grid-${descriptor.fingerprint}`;
   const originY = originYFor(descriptor.rows);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${CANVAS} ${CANVAS}" role="img" aria-labelledby="title">
   <title id="title">${escapeXml(title)}</title>
-  <defs>
-    <pattern id="${patternId}" width="${BACKGROUND_GRID}" height="${BACKGROUND_GRID}" patternUnits="userSpaceOnUse">
-      <path d="M ${BACKGROUND_GRID} 0 H 0 V ${BACKGROUND_GRID}" fill="none" stroke="${GRID}" stroke-width="2"/>
-    </pattern>
-  </defs>
   <rect width="${CANVAS}" height="${CANVAS}" fill="${BACKGROUND}"/>
-  <rect width="${CANVAS}" height="${CANVAS}" fill="url(#${patternId})" shape-rendering="crispEdges"/>
   <g fill="${descriptor.accent}" shape-rendering="crispEdges">
 ${moduleRectangles(descriptor.pixels, originY)}
   </g>
@@ -408,8 +399,6 @@ export {
   BACKGROUND,
   EYE,
   requireNonEmptyString,
-  GRID,
-  BACKGROUND_GRID,
   originYFor,
   position,
 };

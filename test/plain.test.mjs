@@ -159,6 +159,8 @@ test("SVG paints the body in the accent color and the eyes white", () => {
   assert.ok(PALETTE.includes(descriptor.accent));
   assert.match(svg, new RegExp(`<g fill="${descriptor.accent}"`));
   assert.match(svg, new RegExp(`<g fill="${EYE}"`));
+  assert.doesNotMatch(svg, /<pattern\b/);
+  assert.doesNotMatch(svg, /<defs\b/);
   assert.doesNotMatch(svg, /<(circle|ellipse|image|polygon|polyline)\b/);
   assert.doesNotMatch(svg, /\brx=/);
   assert.doesNotMatch(svg, /svg-user/);
@@ -222,29 +224,36 @@ test("PNG keeps exactly two white eyes and no other white areas", () => {
   }
 });
 
-test("PNG uses only the background, grid, accent and eye colors", () => {
+test("PNG uses only the background, accent and eye colors", () => {
   const descriptor = createAvatarDescriptor("palette-user", { secret: SECRET });
   const decoded = decodeRgbPng(generateAvatarPng("palette-user", { secret: SECRET, size: 128 }));
   const allowed = new Set([
     hexToRgb("#080A0E").join(","),
-    hexToRgb("#20242B").join(","),
     hexToRgb(descriptor.accent).join(","),
     hexToRgb(EYE).join(","),
   ]);
 
-  const seen = new Set();
   for (let row = 0; row < decoded.height; row += 1) {
     for (let column = 0; column < decoded.width; column += 1) {
-      seen.add(decoded.pixel(column, row).join(","));
+      const color = decoded.pixel(column, row).join(",");
+      assert.ok(allowed.has(color), `unexpected color ${color}`);
     }
   }
+});
 
-  for (const color of seen) {
-    assert.ok(allowed.has(color) || color.split(",").every((channel) => Number(channel) < 48),
-      `unexpected color ${color}`);
+test("PNG background is a flat black field with no grid lines", () => {
+  const decoded = decodeRgbPng(generateAvatarPng("background-user", { secret: SECRET, size: 128 }));
+  const background = hexToRgb("#080A0E");
+  for (const column of [0, 1, decoded.width - 1]) {
+    for (let row = 0; row < decoded.height; row += 1) {
+      assert.deepEqual(decoded.pixel(column, row), background);
+    }
   }
-  assert.ok(seen.has(hexToRgb(descriptor.accent).join(",")));
-  assert.ok(seen.has(hexToRgb(EYE).join(",")));
+  for (const row of [0, 1, decoded.height - 1]) {
+    for (let column = 0; column < decoded.width; column += 1) {
+      assert.deepEqual(decoded.pixel(column, row), background);
+    }
+  }
 });
 
 test("invalid identifiers, secrets and sizes fail closed", () => {

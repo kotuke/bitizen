@@ -1,6 +1,6 @@
 {
   "name": "@kotuke/bitizen",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Deterministic, zero-dependency pixel avatars: the whole figure is personal, in two styles",
   "keywords": [
     "identicon",

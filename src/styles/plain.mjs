@@ -4,12 +4,10 @@ import { deflateSync } from "node:zlib";
 import {
   AVATAR_VERSION,
   BACKGROUND,
-  BACKGROUND_GRID,
   CANVAS,
   CENTER_X,
   DEFAULT_SIZE,
   EYE,
-  GRID,
   MAX_SIZE,
   MIN_SIZE,
   MODULE_SIZE,
@@ -79,12 +77,6 @@ function fill(buffer, color) {
     buffer[offset + 1] = green;
     buffer[offset + 2] = blue;
   }
-}
-
-function blendRgb(background, foreground, amount) {
-  return background.map((channel, index) => Math.round(
-    channel + (foreground[index] - channel) * amount,
-  ));
 }
 
 function fillTargetRect(buffer, size, left, top, width, height, color) {
@@ -208,16 +200,6 @@ export function renderAvatarPng(descriptor, { size = DEFAULT_SIZE } = {}) {
   const rgb = Buffer.allocUnsafe(size * size * 3);
   const backgroundColor = hexToRgb(BACKGROUND);
   fill(rgb, backgroundColor);
-
-  const scale = size / CANVAS;
-  const gridWidth = Math.max(1, Math.round(2 * scale));
-  const gridCoverage = Math.min(1, (2 * scale) / gridWidth);
-  const gridColor = blendRgb(backgroundColor, hexToRgb(GRID), gridCoverage);
-  for (let coordinate = 0; coordinate < CANVAS; coordinate += BACKGROUND_GRID) {
-    const target = Math.round(coordinate * scale);
-    fillTargetRect(rgb, size, target, 0, gridWidth, size, gridColor);
-    fillTargetRect(rgb, size, 0, target, size, gridWidth, gridColor);
-  }
 
   const originY = originYFor(descriptor.rows);
   drawModules(rgb, size, descriptor.pixels, originY, hexToRgb(descriptor.accent));

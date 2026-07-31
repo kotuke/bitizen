@@ -17,7 +17,7 @@ The top two rows are `plain`, the bottom two are `rich`.
 
 | | `plain` | `rich` |
 | --- | --- | --- |
-| Background | black with a square grid | plain black |
+| Background | plain black | plain black |
 | Color | a single paint for the whole figure | 5 color schemes plus second-color trim |
 | Body | solid | cutouts: visor, mouth, chest slot |
 | Symmetry | always mirrored | about half of the figures are asymmetric |

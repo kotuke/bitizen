@@ -90,6 +90,29 @@
     flex: 0 0 auto;
   }
   .demo #demo-stage svg { display: block; width: 100%; height: 100%; }
+  .demo .field-label { font-size: 13px; color: #8b939c; }
+  .demo .style-options { display: flex; gap: 8px; }
+  .demo .style-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    cursor: pointer;
+  }
+  .demo .style-option[aria-pressed="true"] {
+    border-color: #6aa9ff;
+    background: #16202c;
+  }
+  .demo .style-option .swatch {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #080a0e;
+    flex: 0 0 auto;
+  }
+  .demo .style-option .swatch svg { display: block; width: 100%; height: 100%; }
+  .demo .style-option .style-name { font-size: 13px; }
   .demo #demo-meta {
     margin-top: 12px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -114,8 +137,8 @@ you type leaves this page.</p>
     <form id="demo-form">
       <label for="demo-id">Identifier</label>
       <input id="demo-id" type="text" autocomplete="off" spellcheck="false" placeholder="user-123">
-      <label for="demo-style">Style</label>
-      <select id="demo-style"></select>
+      <span class="field-label">Style</span>
+      <div id="demo-styles" class="style-options"></div>
       <button type="button" id="demo-random">Random</button>
       <a class="button" id="demo-download" hidden>Download SVG</a>
     </form>
@@ -128,7 +151,7 @@ you type leaves this page.</p>
 so the gallery can be rebuilt byte for byte with <code>npm run docs</code>.</p>
 
 <h2>Style <code>plain</code></h2>
-<p>Grid background, one paint for the whole figure, always mirrored.</p>
+<p>One paint for the whole figure, always mirrored, solid body.</p>
 <div class="grid">
       <figure>
         <img src="gallery/plain-001.png" alt="plain avatar for demo-001" width="256" height="256" loading="lazy">
