@@ -38,6 +38,9 @@
     "./browser": {
       "types": "./src/index.d.ts",
       "default": "./src/browser.mjs"
+    },
+    "./server": {
+      "default": "./src/server.mjs"
     }
   },
   "types": "./src/index.d.ts",
@@ -46,7 +49,8 @@
   },
   "files": [
     "src",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "llms.txt"
   ],
   "publishConfig": {
     "access": "public"

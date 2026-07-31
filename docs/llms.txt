@@ -1,0 +1,98 @@
+# Bitizen
+
+> Deterministic pixel avatar people for Node.js and browsers. The same `userId`
+> plus the same secret always produce the same figure. Zero runtime
+> dependencies, SVG and PNG output, two visual styles.
+
+Install: `npm install @kotuke/bitizen` (Node.js 20+, ESM only).
+
+## Core API
+
+```js
+import {
+  createAvatarDescriptor,
+  generateAvatarPng,
+  generateAvatarSvg,
+  renderAvatarPng,
+  renderAvatarSvg,
+  avatarEtag,
+  normalizeSize,
+  normalizeStyle,
+  PALETTE,
+  STYLE_NAMES,      // ["plain", "rich"]
+  DEFAULT_STYLE,    // "plain"
+  AVATAR_VERSION,   // "v1"
+} from "@kotuke/bitizen";
+
+// One-shot helpers
+const svg = generateAvatarSvg(userId, { secret, style, size, title }); // string
+const png = generateAvatarPng(userId, { secret, style, size });        // Buffer
+
+// Reuse one seed for both formats
+const descriptor = createAvatarDescriptor(userId, { secret, style });
+renderAvatarSvg(descriptor, { size, title });
+renderAvatarPng(descriptor, { size });
+```
+
+Options:
+
+- `secret` — required string, at least 16 characters. Keep it on the backend.
+- `style` — `"plain"` or `"rich"`, default `"plain"`. Unknown value throws `RangeError`.
+- `size` — integer 32…2048, default 256. Out of range throws `RangeError`.
+- `title` — SVG accessible title, escaped automatically.
+
+Errors: empty `userId` or non-string throws `TypeError`; short secret, bad size
+or unknown style throw `RangeError`. Nothing is ever written before validation.
+
+## Browser entry point
+
+```js
+import { generateAvatarSvg } from "@kotuke/bitizen/browser";
+```
+
+Same figures byte for byte, seeded by a bundled SHA-256 instead of `node:crypto`.
+SVG only — PNG needs zlib and stays Node-side.
+
+## HTTP server
+
+```js
+import { createAvatarServer } from "@kotuke/bitizen/server";
+const server = createAvatarServer({ secret, maxCacheEntries: 512 });
+```
+
+Routes: `GET /avatars/v1/<urlencoded-id>.(svg|png)?size=512&style=rich` and
+`GET /health`. Responses carry `ETag`, `Cache-Control: immutable` and CORS
+headers; unknown style returns 400, unknown version 404.
+
+## Descriptor shape
+
+```js
+// style "plain"
+{ version, fingerprint, accent, pixels: [[column, row], …], eyes, rows, style }
+
+// style "rich"
+{ version, fingerprint, accent, scheme, layers: [{ color, pixels }], eyes, rows, columns, style }
+```
+
+`fingerprint` is the first 16 bytes of the HMAC as lowercase hex — safe to store
+and log; the raw `userId` never appears in the output.
+
+## Behaviour worth knowing
+
+- Determinism key: `AVATAR_VERSION + AVATAR_SECRET + style + userId`. Changing
+  any of them changes the picture; changing the secret rotates every avatar.
+- Both styles render on a flat black field; the figure is one connected shape of
+  square modules, and eyes are always white.
+- `plain` figures are always mirrored, `rich` figures are asymmetric about half
+  the time and can carry a second colour plus body cutouts.
+- Visual collisions are possible in principle: 0 repeats per 100,000 users for
+  `rich`, 26 for `plain` on the reference secret.
+- Throughput on the build machine: SVG ≈ 0.2–0.3 ms, PNG ≈ 0.8–1.0 ms per avatar
+  at 256×256.
+
+## Links
+
+- Source: https://github.com/kotuke/bitizen
+- Live demo and gallery: https://kotuke.github.io/bitizen/
+- Changelog: https://github.com/kotuke/bitizen/blob/main/CHANGELOG.md
+- Sibling project (shared robot, personal sigil): https://github.com/kotuke/bitling

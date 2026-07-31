@@ -1,6 +1,7 @@
 # Bitizen
 
 [![test](https://github.com/kotuke/bitizen/actions/workflows/test.yml/badge.svg)](https://github.com/kotuke/bitizen/actions/workflows/test.yml)
+[![npm](https://img.shields.io/npm/v/@kotuke%2Fbitizen?color=cb3837&logo=npm)](https://www.npmjs.com/package/@kotuke/bitizen)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Deterministic pixel avatar people. The same `userId` with the same
@@ -56,6 +57,16 @@ the figure, so a bot always stays a single connected shape.
 | 3 | torso and neck neutral grey, the rest in the accent |
 | 4 | only the head in the accent, the rest neutral grey |
 
+## Install
+
+```bash
+npm install @kotuke/bitizen
+```
+
+Two styles ship in one package; pick one with the `style` option. Node.js 20 or newer; the package has no runtime
+dependencies. A browser-only entry point is available as
+`@kotuke/bitizen/browser` — it renders SVG without `node:crypto` or `zlib`.
+
 ## Quick start
 
 Node.js 20 or newer is required.
@@ -89,7 +100,7 @@ a URL.
 ## Use as a module
 
 ```js
-import { generateAvatarPng, generateAvatarSvg } from "./src/index.mjs";
+import { generateAvatarPng, generateAvatarSvg } from "@kotuke/bitizen";
 
 const options = { secret: process.env.AVATAR_SECRET, size: 256 };
 
@@ -105,7 +116,7 @@ import {
   createAvatarDescriptor,
   renderAvatarPng,
   renderAvatarSvg,
-} from "./src/index.mjs";
+} from "@kotuke/bitizen";
 
 const bot = createAvatarDescriptor("user-123", {
   secret: process.env.AVATAR_SECRET,
@@ -181,6 +192,13 @@ example `${user.id}:${user.avatarVariant}`.
 Grown out of [bitling](https://github.com/kotuke/bitling), where everyone
 shared the same white robot and only the sigil above it was personal. Bitizen
 drops the sigil and makes the figure itself personal.
+
+## Using with an AI assistant
+
+[`llms.txt`](llms.txt) is a compact, machine-readable summary of the whole API —
+options, error behaviour, descriptor shape and the determinism contract. Point an
+assistant at `https://kotuke.github.io/bitizen/llms.txt` (or paste the file) and it
+has everything needed to wire the library up correctly without reading the source.
 
 ## Contributing
 
