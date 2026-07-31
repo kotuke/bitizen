@@ -1,0 +1,67 @@
+{
+  "name": "@kotuke/bitizen",
+  "version": "1.0.0",
+  "description": "Deterministic, zero-dependency pixel avatars: the whole figure is personal, in two styles",
+  "keywords": [
+    "identicon",
+    "avatar",
+    "avatars",
+    "pixel-art",
+    "png",
+    "svg",
+    "deterministic",
+    "zero-dependency",
+    "hmac",
+    "pixel-people",
+    "two-styles"
+  ],
+  "homepage": "https://kotuke.github.io/bitizen/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kotuke/bitizen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kotuke/bitizen/issues"
+  },
+  "author": "Aleksandr Davydenko",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "browser": "./src/browser.mjs",
+      "default": "./src/index.mjs"
+    },
+    "./browser": {
+      "types": "./src/index.d.ts",
+      "default": "./src/browser.mjs"
+    }
+  },
+  "types": "./src/index.d.ts",
+  "bin": {
+    "bitizen": "./src/cli.mjs"
+  },
+  "files": [
+    "src",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test",
+    "benchmark": "node benchmark.mjs",
+    "collision": "node collision-check.mjs",
+    "sample": "node examples/generate-samples.mjs",
+    "preview": "node examples/contact-sheet.mjs",
+    "lint": "eslint .",
+    "docs": "node examples/build-docs.mjs"
+  },
+  "devDependencies": {
+    "eslint": "^10.8.0"
+  }
+}
